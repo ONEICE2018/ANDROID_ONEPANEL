@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="landscape"
+
+
+    tools:context=".MainActivity">
+<!--    android:background="@drawable/mainbg"-->
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/mainDrawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-47dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <!-- 内容区 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/viewpage_conset"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="conset" />
+
+                <Button
+                    android:id="@+id/viewpage_protect"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="protect" />
+
+                <Button
+                    android:id="@+id/viewpage_unit"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="units" />
+
+                <Button
+                    android:id="@+id/viewpage_warning"
+                    android:layout_width="46dp"
+                    android:layout_height="match_parent"
+                    android:text="warring" />
+
+                <TextView
+                    android:id="@+id/msgbox"
+                    android:layout_width="138dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:background="#123456"
+                    android:scrollbars="vertical"
+                    android:textColor="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/showfram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="fram:###(/s)" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/mainViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="303dp"
+                >
+
+                <FrameLayout
+                    android:id="@+id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="303dp"
+                    >
+                </FrameLayout>
+            </androidx.viewpager.widget.ViewPager>
+
+
+
+            <!--            功率设定-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_Pset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pset:###W" />
+
+
+                <EditText
+                    android:id="@+id/edit_Pset"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorAccent"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/enter_Pset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="enter" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/step_Reduce_Pset"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="-" />
+
+                    <EditText
+                        android:id="@+id/edit_step_Pset"
+                        android:layout_width="50dp"
+                        android:layout_height="30dp"
+                        android:background="#0000ff"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:singleLine="true" />
+
+                    <Button
+                        android:id="@+id/step_Add_Pset"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="+" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="134dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_PWD"
+                        android:layout_width="97dp"
+                        android:layout_height="30dp"
+                        android:text="PWD:####W" />
+
+                    <TextView
+                        android:id="@+id/text_PWR"
+                        android:layout_width="94dp"
+                        android:layout_height="30dp"
+                        android:text="PWR:####W" />
+
+                    <TextView
+                        android:id="@+id/text_ANR"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:text="ANR:####W" />
+
+                    <TextView
+                        android:id="@+id/text_Volt"
+                        android:layout_width="107dp"
+                        android:layout_height="30dp"
+                        android:text="Volt:####A" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_Vswr"
+                        android:layout_width="80dp"
+                        android:layout_height="30dp"
+                        android:text="Vswr:####" />
+
+                    <TextView
+                        android:id="@+id/text_Temp"
+                        android:layout_width="98dp"
+                        android:layout_height="30dp"
+                        android:text="Temp:####℃" />
+
+                    <TextView
+                        android:id="@+id/text_flow0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="Flow:####L/Min" />
+
+                    <TextView
+                        android:id="@+id/text_flow_temp0"
+                        android:layout_width="119dp"
+                        android:layout_height="30dp"
+                        android:text="FlowTem:####℃" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/CURR_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="CURR1:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_2"
+                        android:layout_width="101dp"
+                        android:layout_height="30dp"
+                        android:text="CURR2:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_3"
+                        android:layout_width="101dp"
+                        android:layout_height="30dp"
+                        android:text="CURR3:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_4"
+                        android:layout_width="116dp"
+                        android:layout_height="match_parent"
+                        android:text="CURR4:####A" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/CURR_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="CURR5:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_6"
+                        android:layout_width="102dp"
+                        android:layout_height="30dp"
+                        android:text="CURR6:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="CURR7:####A" />
+
+                    <TextView
+                        android:id="@+id/CURR_8"
+                        android:layout_width="126dp"
+                        android:layout_height="30dp"
+                        android:text="CURR8:####A" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/openNetView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="openNetView" />
+
+
+                <Button
+                    android:id="@+id/rf"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_off"
+                    android:text="RFON"></Button>
+
+                <Button
+                    android:id="@+id/power"
+                    android:layout_width="60dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/button_off"
+                    android:text="Poweon"></Button>
+
+                <Button
+                    android:id="@+id/openConView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="System" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/local"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="Local" />
+
+                <Button
+                    android:id="@+id/clear_msgbox"
+                    android:layout_width="42dp"
+                    android:layout_height="40dp"
+                    android:text="clear" />
+
+                <Button
+                    android:id="@+id/internalS"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="internalS" />
+
+                <Button
+                    android:id="@+id/restart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ReSatrt" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 左边菜单 -->
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="#a00f0ff0"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="#0f0ff0"
+                android:gravity="left"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:text="IP:" />
+
+                    <EditText
+                        android:id="@+id/ip"
+                        android:layout_width="200dp"
+                        android:layout_height="30dp"
+                        android:background="#ffff00"
+                        android:text="192.168.1.192" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:text="Port:" />
+
+                    <EditText
+                        android:id="@+id/port"
+                        android:layout_width="200dp"
+                        android:layout_height="30dp"
+                        android:background="#ffff00"
+                        android:inputType="number"
+                        android:text="5000" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/client_TCP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_off"
+                    android:text="TCP" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/findaddr"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:text="Findaddr" />
+
+            <Button
+                android:id="@+id/updata"
+                android:layout_width="121dp"
+                android:layout_height="100dp"
+                android:text="Updata" />
+
+            <ProgressBar
+                android:id="@+id/progress_updata"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="85dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <!-- 右边菜单 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="#00ff00"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
