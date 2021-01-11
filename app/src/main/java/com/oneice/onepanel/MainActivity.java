@@ -1,5 +1,5 @@
 package com.oneice.onepanel;
-//mainactivity
+//mainactivity_special
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
