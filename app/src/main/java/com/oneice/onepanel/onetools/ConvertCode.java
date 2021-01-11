@@ -9,7 +9,7 @@ public class ConvertCode {
      * @Title:bytes2HexString
      * @Description:字节数组转16进制字符串
      * @param b
-     *            字节数组
+     * 字节数组
      * @return 16进制字符串
      * @throws
      */

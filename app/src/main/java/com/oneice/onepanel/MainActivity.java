@@ -1,5 +1,5 @@
 package com.oneice.onepanel;
-
+//mainactivity
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -153,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 申请 相机 麦克风权限
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
-
                     Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
         }
     }
