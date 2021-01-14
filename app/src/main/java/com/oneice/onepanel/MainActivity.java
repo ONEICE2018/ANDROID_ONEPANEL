@@ -508,9 +508,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             askBussy=false;
                         }
                     }
-                }else{
+                }else
+                    {
                     entries =null;
-                }
+                    }
                 try
                 {
                     Thread.currentThread().sleep(askT);//毫秒
