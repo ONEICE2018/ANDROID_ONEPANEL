@@ -37,6 +37,18 @@ public class ConvertCode {
         }
         return result.toString();
     }
+    public static String bytes2HexString(byte[] b,int start,int end) {
+        StringBuffer result = new StringBuffer();
+        String hex;
+        for (int i = start; i < end; i++) {
+            hex = Integer.toHexString(b[i] & 0xFF);
+            if (hex.length() == 1) {
+                hex = '0' + hex;
+            }
+            result.append(hex.toUpperCase());
+        }
+        return result.toString();
+    }
     /**
      * @Title:hexString2Bytes
      * @Description:16进制字符串转字节数组
@@ -250,6 +262,24 @@ public class ConvertCode {
             i++;
         }
         return bytes;
+    }
+    /**
+     * 去除字符串str1中的str2
+     *
+     * @param str1 原字符串
+     * @param str2 去掉的字符串
+     * @return
+     */
+    public static String getSubString(String str1, String str2) {
+        StringBuffer sb = new StringBuffer(str1);
+        while (true) {
+            int index = sb.indexOf(str2);
+            if (index == -1) {
+                break;
+            }
+            sb.delete(index, index + str2.length());
+        }
+        return sb.toString();
     }
 
 }

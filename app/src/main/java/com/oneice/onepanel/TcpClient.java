@@ -67,6 +67,10 @@ public class TcpClient {
     }
 
 
+    public String getIP() {
+        return IP;
+    }
+
     private String IP;
     private int PORT;
     private boolean connecting = false;

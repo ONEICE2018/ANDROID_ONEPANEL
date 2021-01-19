@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <Button
+        android:id="@+id/remote_bin"
+        android:layout_width="121dp"
+        android:layout_height="100dp"
+        android:text="RemoteBin" />
+    <ProgressBar
+        android:id="@+id/progress_remotbinlistget"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="85dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center"
+        android:max="100"
+        android:progress="0" />
+    <ListView
+        android:id="@+id/remotebin_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </ListView>
+
+</LinearLayout>

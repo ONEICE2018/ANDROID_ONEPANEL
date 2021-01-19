@@ -24,8 +24,10 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +48,9 @@ import com.oneice.onepanel.Fragments.FragmentWarning;
 import com.oneice.onepanel.Fragments.OneLifeFragment;
 import com.oneice.onepanel.Fragments.TabFragmentPagerAdapter;
 import com.oneice.onepanel.Manager.AddrManager;
+import com.oneice.onepanel.Manager.RemotManager;
 import com.oneice.onepanel.onetools.ConvertCode;
+import com.oneice.onepanel.remoteFragments.RemoteFragmentUpdata;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,6 +72,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FragmentProtect fragmentProtect;
     FragmentUnit    fragmentUnit;
     FragmentWarning fragmentWarning;
+
+    public List<OneLifeFragment> remoteviewlist;
+    public ViewPager remotViewPager;
+    public TabFragmentPagerAdapter remotViewAdapter;
+    public RemoteFragmentUpdata remoteFragmentUpdata;
+
+
     public  static MainActivity mainActivity=null;
     Button findaddr;
     Button restart;
@@ -116,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView text_Pset;
     TextView text_Vswr;
 
-
-
+    //远程服务器信息管理器
+    public RemotManager remotManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
      */
     void init(){
+        remotManager=new RemotManager();//这个必须比remoteview些先初始化
         text_PWD  =(TextView)findViewById(R.id.text_PWD);
         text_PWR  =(TextView)findViewById(R.id.text_PWR);
         text_ANR  =(TextView)findViewById(R.id.text_ANR);
@@ -239,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentProtect=new FragmentProtect();
         fragmentUnit=new FragmentUnit();
         fragmentWarning=new FragmentWarning();
-
         list.add(fragmentConset);
         list.add(fragmentProtect);
         list.add(fragmentUnit);
@@ -247,6 +258,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), list);
         myViewPager.setAdapter(adapter);
         myViewPager.setCurrentItem(0);  //初始化显示第一个页面
+
+        remotViewPager = (ViewPager) findViewById(R.id.remoteViewPager);
+        remoteviewlist=new ArrayList<>();
+        remoteFragmentUpdata=new RemoteFragmentUpdata();
+        remoteviewlist.add(remoteFragmentUpdata);
+        remotViewAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), remoteviewlist);
+        remotViewPager.setAdapter(remotViewAdapter);
+        remotViewPager.setCurrentItem(0);
+
         ((OneLifeFragment)(adapter.getItem(myViewPager.getCurrentItem()))).setFragmentLife(true);
         myViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -292,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
      */
     void listenerinit(){
+
         findaddr   .setOnClickListener(this);
         restart    .setOnClickListener(this);
         localremote.setOnClickListener(this);
@@ -333,6 +354,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void Tcpislife(boolean life){
         if(life){
             modbusAsker.life=true;
+           if(tcpclient.getIP().equals(remotManager.getRemoteIP())){
+                remotManager.setRemoteConnected(true);
+                showmsgs("remote connect succes");
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -342,9 +367,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             showmsgs("connect true");
         }else{
             modbusAsker.life=false;
+            remotManager.setRemoteConnected(false);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     tcpClient.setBackgroundResource(R.drawable.button_off);
                 }
             });
@@ -373,6 +400,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int ADDR=10;
     boolean askBussy=false;
     public void sendconmod(int addr, int set){ //单地址写控制
+        if(remotManager.isRemoteConnected()){
+            return;
+        }
         int wite=0;
         while(askBussy) {
             wite++;
@@ -493,7 +523,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }
                                 if(!Updating) {
-                                    modbusAsker(nowBaseAddr, entry.getValue());
+                                    if(!remotManager.isRemoteConnected()){//如果连接的是我的服务器的地址就不访问modbus数据
+                                        modbusAsker(nowBaseAddr, entry.getValue());
+                                    }
                                 }
                             }else{
                                 forbeterflag=0;
@@ -525,7 +557,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     int disconflag=0;
-    void senddatas(String data){
+    public void senddatas(String data){
 
         if(!Updating) {
             if (tcpclient == null || !tcpclient.getLife()) {
@@ -576,10 +608,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
-
-
-
+    
     //modbus解析
     List<Byte> getdata=null;
     List<Byte> contxt=null;
@@ -587,6 +616,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int framrecoder=0;
     long startTime;
     public void analysis_Modbus(byte[] data,int tlen){
+        //showmsgs("get:"+new String(data)+";");
+        //解析远程服务器指令
+        remotManager.analysis_remote(data,tlen);
         analysis_updata(data,tlen);
         if(Afaddr==1){
             showmsgs("ADDR "+data[6]);
@@ -888,7 +920,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updatastartsendok=true;
                 showmsgs("UPSTART");
             }else{
+
                 String nowmsg = mainActivity.msgbox.getText().toString();
+                if(rfname.equals("remoteFragmentUpdata;")){
+
+//                    remoteviewlist.clear();
+//                    remoteviewlist.add(remoteFragmentUpdata);
+//                    remotViewAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), remoteviewlist);
+                  //  remotViewAdapter.notifyDataSetChanged();
+                    remotViewPager.setAdapter(remotViewAdapter);
+                    return;
+                }
                 mainActivity.msgbox.setText(nowmsg+"\n"+rfname);
                 if(nowmsg.length()>1000){
                     mainActivity.msgbox.setText("");
@@ -1013,14 +1055,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
+  public static String wa="asdasdasdadssadassd\r\n";
     @SuppressLint("WrongConstant")
     @Override
     public void onClick(View v) {
         consend(v.getId());//控制相关
         //主界面
         switch (v.getId()){
+
+
             case R.id.findaddr:
+                if(remotManager.isRemoteConnected()){
+                    return;
+                }
                 byte[] sbuilder=new byte[8];
                 sbuilder[0]=(byte)ADDR;
                 sbuilder[1]=(byte)READREGISTER;
@@ -1050,6 +1097,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.client_TCP:
                 if(tcpclient!=null&&tcpclient.channel!=null&&tcpclient.getLife())
                 {
+                    if(remotManager.isRemoteConnected()){//主动断开连接
+                        String str = "Stop:Disconnect;" ;
+                        senddatas(ConvertCode.string2HexString(str));
+                      for(int i=0;i<10000;i++){senddatas(ConvertCode.string2HexString(str));}
+                    }
                     modbusAsker.life=false;//停止moudbus访问
                     tcpclient.channel.disconnect();
                     tcpclient.channel.close();
