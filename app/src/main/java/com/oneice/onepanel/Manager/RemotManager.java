@@ -1,5 +1,8 @@
 package com.oneice.onepanel.Manager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import com.oneice.onepanel.MainActivity;
 import com.oneice.onepanel.onetools.ConvertCode;
 import com.oneice.onepanel.remoteFragments.RemoteFragmentUpdata;
@@ -102,8 +105,17 @@ public class RemotManager {
             }
             if(strdata.equals(RemoteFragmentUpdata.downloadBinFileName))
             {
-                 MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:OKStart;"));//bin文件下载1：开始下载
-                MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
+               //查看是否文件以经存在
+                   MainActivity.mainActivity.oneFileManager.init();
+                  if(!MainActivity.mainActivity.remoteFragmentUpdata.bindownloadhasbeenstart&& MainActivity.mainActivity.oneFileManager.updataBinFiles.contains(RemoteFragmentUpdata.downloadBinFileName)) {
+                       MainActivity.mainActivity.remoteFragmentUpdata.bindownloadhasbeenstart=true;
+                       MainActivity.showmsgs("Download:Dialog:RemakeFile:Show;");//让mainactivity显示
+                  }else{
+                      MainActivity.mainActivity.oneFileManager.createNewUpdataBin(RemoteFragmentUpdata.downloadBinFileName);//创建文件
+                      MainActivity.mainActivity.oneFileManager.getBinFileWirter(RemoteFragmentUpdata.downloadBinFileName)  ;//获取传输通道
+                      MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:OKStart;"));//bin文件下载1：开始下载
+                      MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
+                  }
             }else
                 {
                     MainActivity.showmsgs("DownloadbinNamefild");
@@ -133,13 +145,18 @@ public class RemotManager {
                 MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(
                         MainActivity.mainActivity.remoteFragmentUpdata.getFileTLen()+ getdata.length-2
                 );
+                MainActivity.mainActivity.oneFileManager.writToBinfile(getdata,2,getdata.length-2);
                 if(getdata.length>2){//先把进度拿出来
                     int pro=getdata[0]<<8|getdata[1];
                     MainActivity.mainActivity.remoteFragmentUpdata.refrashinterface("remoteFragmentUpdata:upingPro:"+pro+";");
                 }
                 String SavebinStrng=ConvertCode.bytes2HexString(getdata,2,getdata.length);
+
                 //bin文件下载2：把存入的每一帧数据再取出来反馈到服务器寻求下一帧数据
                 String backstr=SavebinStrng;
+                if(MainActivity.mainActivity.remoteFragmentUpdata.needreDownLoad){
+                    MainActivity.mainActivity.remoteFragmentUpdata.needreDownLoad=false;
+                }
                 MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:"+backstr+";"));
             }
          else  if(strdata.contains("Dowload:BinOver:")&&strdata.endsWith(";"))  {
@@ -155,15 +172,21 @@ public class RemotManager {
                 if( MainActivity.mainActivity.remoteFragmentUpdata.getFileTLen()==flean)
                 {
                     MainActivity.showmsgs("Download:bin:Over:FileLen:"+flean+";");
+
+                }else{
+
+
                 }
                 DownLoadBinOver();
             }
 
     }
-void DownLoadBinOver(){
-    MainActivity.mainActivity.remoteFragmentUpdata.refrashinterface("remoteFragmentUpdata:upingPro:"+0+";");
-
-}
+    void DownLoadBinOver(){
+         MainActivity.mainActivity.oneFileManager.binWriterClose();
+        MainActivity.mainActivity.oneFileManager.init();
+         MainActivity.showmsgs("remoteFragmentUpdata;");
+         MainActivity.mainActivity.remoteFragmentUpdata.refrashinterface("remoteFragmentUpdata:upingPro:"+0+";");
+    }
     private String remoteIP="120.79.56.190";//我的远程服务器地址
     //private String remoteIP="192.168.1.100";
     public List<String> remote_updata_bin;

@@ -48,6 +48,7 @@ import com.oneice.onepanel.Fragments.FragmentWarning;
 import com.oneice.onepanel.Fragments.OneLifeFragment;
 import com.oneice.onepanel.Fragments.TabFragmentPagerAdapter;
 import com.oneice.onepanel.Manager.AddrManager;
+import com.oneice.onepanel.Manager.OneFileManager;
 import com.oneice.onepanel.Manager.RemotManager;
 import com.oneice.onepanel.onetools.ConvertCode;
 import com.oneice.onepanel.remoteFragments.RemoteFragmentUpdata;
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //远程服务器信息管理器
     public RemotManager remotManager;
+    //文件管理器
+    public OneFileManager oneFileManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tasker=new Thread(modbusAsker);
         tasker.start();
         requestPermission();
+        //创建文件管理器
+        oneFileManager=new OneFileManager();
     }
     @Override
     public void finish() {
@@ -883,6 +888,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @SuppressLint("HandlerLeak")
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -919,11 +925,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 doUpData();
                 updatastartsendok=true;
                 showmsgs("UPSTART");
-            }else{
+            }else if(rfname.equals("Download:Dialog:RemakeFile:Show;")){
+                //代码块 msgbox弹出
+                //创建一个 AlertDialog.Builder 对象
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                //给对话框添加title
+                builder.setTitle("警告！");
+                //给对话框添加内容
+                builder.setMessage("文件 " + RemoteFragmentUpdata.downloadBinFileName + " 已存在是否覆盖？");
+                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.mainActivity.oneFileManager.createNewUpdataBin(RemoteFragmentUpdata.downloadBinFileName);//创建文件
+                        MainActivity.mainActivity.oneFileManager.getBinFileWirter(RemoteFragmentUpdata.downloadBinFileName)  ;//获取传输通道
+                        MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:OKStart;"));//bin文件下载1：开始下载
+                        MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
+                    }
+                });
+                builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                //切记勿忘~开启dialog
+                builder.show();
+
+            }else
+                {
 
                 String nowmsg = mainActivity.msgbox.getText().toString();
                 if(rfname.equals("remoteFragmentUpdata;")){
-
+                oneFileManager.init();
 //                    remoteviewlist.clear();
 //                    remoteviewlist.add(remoteFragmentUpdata);
 //                    remotViewAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), remoteviewlist);

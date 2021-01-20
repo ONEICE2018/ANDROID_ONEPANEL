@@ -2,6 +2,7 @@ package com.oneice.onepanel.remoteFragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ public class RemoteFragmentUpdata extends OneLifeFragment implements RefrashFreg
     //远程同步
     Button remotebinlistget;
     ListView remotebin_list;
-    ArrayAdapter<String> binlistadapter;
+    RemoteListViewAdapter binlistadapter;
     ProgressBar progress_remotbinlistget;
     //bin文件下载
    public static String downloadBinFileName="";
@@ -74,39 +75,22 @@ public class RemoteFragmentUpdata extends OneLifeFragment implements RefrashFreg
     public void refrashinit(View view) {
         progress_remotbinlistget=view.findViewById(R.id.progress_remotbinlistget);
         remotebin_list=(ListView)view.findViewById(R.id.remotebin_list);
-        binlistadapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainActivity.remotManager.remote_updata_bin);
+
+        binlistadapter = new RemoteListViewAdapter(view.getContext(), R.layout.item_remoteupdatabinlits, MainActivity.mainActivity.remotManager.remote_updata_bin);
+
+//        if( MainActivity.mainActivity.remotManager.remote_updata_bin.size()>0){
+//            binlistadapter.getView(0,remotebin_list.getChildAt(0),remotebin_list).setBackgroundColor(Color.GREEN);
+//            binlistadapter.notifyDataSetChanged();
+//        }
         remotebin_list.setAdapter(binlistadapter);
+
+        //remotebin_list.getChildAt(0).setBackgroundColor(Color.BLUE);
         remotebin_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                //代码块 msgbox弹出
-                //创建一个 AlertDialog.Builder 对象
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                //给对话框添加title
-                builder.setTitle("♞♘♞♘♞♘♞♘♞♘");
-                //给对话框添加内容
-                builder.setMessage("this bin: "+MainActivity.mainActivity.remotManager.remote_updata_bin.get(position)+" you can:");
-                builder.setNegativeButton("Download", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        System.out.println("bin download");
                         downloadBinFileName=MainActivity.mainActivity.remotManager.remote_updata_bin.get(position);
-
-                        MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:bin:"+downloadBinFileName+";"));
-
-                    }
-                });
-                builder.setPositiveButton("exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                //切记勿忘~开启dialog
-                builder.show();
-
-
-
+//                       MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:bin:"+downloadBinFileName+";"));
+                         upDataBinDownloadStart();
             }
         });
         remotebinlistget=(Button)view.findViewById(R.id.remote_bin);
@@ -121,6 +105,37 @@ public class RemoteFragmentUpdata extends OneLifeFragment implements RefrashFreg
             }
             });
        }
+    public static boolean needreDownLoad=false;
+    public static boolean bindownloadhasbeenstart=false;
+    public void upDataBinDownloadStart(){
+        MainActivity.mainActivity.remoteFragmentUpdata.needreDownLoad=true;
+        MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bindownloadhasbeenstart=false;
+                int outtimeflag=0;
+                while(MainActivity.mainActivity.remoteFragmentUpdata.needreDownLoad&&outtimeflag<3){
+                    MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:bin:"+downloadBinFileName+";"));
+                    try {
+                        Thread.sleep(3000);//2S内没一次成功的bin解析则继续发送
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    outtimeflag++;
+                }
+                if(outtimeflag>=3){
+                    MainActivity.mainActivity.oneFileManager.binWriterClose();//如果超时了就关闭文件流资源
+                }
+            }
+        }).start();
+    }
+    public void disableUpdataBinlistView(){
+       /// remotebin_list.setVisibility(View.INVISIBLE);
+    }
+    public void enableUpdataBinlistView(){
+      //  remotebin_list.setVisibility(View.VISIBLE);
+    }
 
 
 }
