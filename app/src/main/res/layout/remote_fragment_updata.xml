@@ -10,10 +10,18 @@
         android:layout_width="121dp"
         android:layout_height="100dp"
         android:text="RemoteBin" />
+    <EditText
+        android:id="@+id/editfindbinfile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="输入需文件名"
+        android:textColor="#ffffffff"
+        android:imeOptions="actionSearch"
+        />
     <ProgressBar
         android:id="@+id/progress_remotbinlistget"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="85dp"
+        android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_gravity="center"
         android:max="100"
@@ -21,7 +29,9 @@
     <ListView
         android:id="@+id/remotebin_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:listSelector="#99FF3300"
+        >
     </ListView>
 
 </LinearLayout>

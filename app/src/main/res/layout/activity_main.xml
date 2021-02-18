@@ -358,14 +358,14 @@
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="left"
-            android:background="#a00f0ff0"
+            android:background="#400f0ff0"
             android:gravity="left"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="200dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:background="#0f0ff0"
+                android:background="#800f0ff0"
                 android:gravity="left"
                 android:orientation="vertical">
 
@@ -373,7 +373,7 @@
 
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="300dp"
                     android:layout_height="30dp"
                     android:orientation="horizontal">
 
@@ -384,14 +384,14 @@
                     <EditText
                         android:id="@+id/ip"
                         android:layout_width="200dp"
-                        android:layout_height="49dp"
+                        android:layout_height="30dp"
                         android:background="#ffff00"
                         android:text="120.79.56.190" />
                 </LinearLayout>
 
 
                 <LinearLayout
-                    android:layout_width="100dp"
+                    android:layout_width="300dp"
                     android:layout_height="30dp"
                     android:orientation="horizontal">
 
@@ -434,7 +434,7 @@
             <ProgressBar
                 android:id="@+id/progress_updata"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="85dp"
+                android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_gravity="center"
                 android:max="100"
@@ -443,12 +443,12 @@
             <androidx.viewpager.widget.ViewPager
             android:id="@+id/remoteViewPager"
             android:layout_width="match_parent"
-            android:layout_height="303dp"
+            android:layout_height="match_parent"
             >
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="303dp"
+                android:layout_height="match_parent"
                 >
             </FrameLayout>
         </androidx.viewpager.widget.ViewPager>
@@ -460,11 +460,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:background="#00ff00"
+            android:background="#400f0ff0"
             android:gravity="center"
             android:orientation="vertical">
-
-
         </LinearLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>

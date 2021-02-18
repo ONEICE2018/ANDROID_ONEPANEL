@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     PrintWriter tcpWriter;
     BufferedReader tcpReader;
     Button tcpClient;
-    TcpClient tcpclient=null;
+    public TcpClient tcpclient=null;
     public static AddrManager addrManager;
     //viewpage切换
     Button viewpage_conset;
@@ -926,30 +926,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updatastartsendok=true;
                 showmsgs("UPSTART");
             }else if(rfname.equals("Download:Dialog:RemakeFile:Show;")){
-                //代码块 msgbox弹出
-                //创建一个 AlertDialog.Builder 对象
-                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-                //给对话框添加title
-                builder.setTitle("警告！");
-                //给对话框添加内容
-                builder.setMessage("文件 " + RemoteFragmentUpdata.downloadBinFileName + " 已存在是否覆盖？");
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.mainActivity.oneFileManager.createNewUpdataBin(RemoteFragmentUpdata.downloadBinFileName);//创建文件
-                        MainActivity.mainActivity.oneFileManager.getBinFileWirter(RemoteFragmentUpdata.downloadBinFileName)  ;//获取传输通道
-                        MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:OKStart;"));//bin文件下载1：开始下载
-                        MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
-                    }
-                });
-                builder.setPositiveButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-                //切记勿忘~开启dialog
-                builder.show();
 
             }else
                 {
@@ -1131,9 +1108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(tcpclient!=null&&tcpclient.channel!=null&&tcpclient.getLife())
                 {
                     if(remotManager.isRemoteConnected()){//主动断开连接
-                        String str = "Stop:Disconnect;" ;
-                        senddatas(ConvertCode.string2HexString(str));
-                      for(int i=0;i<10000;i++){senddatas(ConvertCode.string2HexString(str));}
+//                        String str = "Stop:Disconnect;" ;
+//                        senddatas(ConvertCode.string2HexString(str));
+//                      for(int i=0;i<10000;i++){senddatas(ConvertCode.string2HexString(str));}
                     }
                     modbusAsker.life=false;//停止moudbus访问
                     tcpclient.channel.disconnect();

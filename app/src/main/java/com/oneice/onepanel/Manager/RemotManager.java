@@ -105,17 +105,13 @@ public class RemotManager {
             }
             if(strdata.equals(RemoteFragmentUpdata.downloadBinFileName))
             {
-               //查看是否文件以经存在
-                   MainActivity.mainActivity.oneFileManager.init();
-                  if(!MainActivity.mainActivity.remoteFragmentUpdata.bindownloadhasbeenstart&& MainActivity.mainActivity.oneFileManager.updataBinFiles.contains(RemoteFragmentUpdata.downloadBinFileName)) {
-                       MainActivity.mainActivity.remoteFragmentUpdata.bindownloadhasbeenstart=true;
-                       MainActivity.showmsgs("Download:Dialog:RemakeFile:Show;");//让mainactivity显示
-                  }else{
+                     //查看是否文件以经存在
+
                       MainActivity.mainActivity.oneFileManager.createNewUpdataBin(RemoteFragmentUpdata.downloadBinFileName);//创建文件
                       MainActivity.mainActivity.oneFileManager.getBinFileWirter(RemoteFragmentUpdata.downloadBinFileName)  ;//获取传输通道
                       MainActivity.mainActivity.senddatas(ConvertCode.string2HexString("Download:NextBin:OKStart;"));//bin文件下载1：开始下载
                       MainActivity.mainActivity.remoteFragmentUpdata.setFileTLen(0);
-                  }
+
             }else
                 {
                     MainActivity.showmsgs("DownloadbinNamefild");
@@ -175,20 +171,22 @@ public class RemotManager {
 
                 }else{
 
-
+                    MainActivity.showmsgs("文件下载失败！接收实际长度"+MainActivity.mainActivity.remoteFragmentUpdata.getFileTLen()+"不等于应该接收长度："+flean);
                 }
                 DownLoadBinOver();
             }
 
     }
     void DownLoadBinOver(){
+        MainActivity.mainActivity.remoteFragmentUpdata.needreDownLoad=false;
          MainActivity.mainActivity.oneFileManager.binWriterClose();
         MainActivity.mainActivity.oneFileManager.init();
          MainActivity.showmsgs("remoteFragmentUpdata;");
          MainActivity.mainActivity.remoteFragmentUpdata.refrashinterface("remoteFragmentUpdata:upingPro:"+0+";");
     }
     private String remoteIP="120.79.56.190";//我的远程服务器地址
-    //private String remoteIP="192.168.1.100";
+    //private String remoteIP="192.168.1.101";
     public List<String> remote_updata_bin;
+    public List<String> SavebinNamelist=null;
     private int pullbinnum=0,getPullbinnumflag=0;
 }
